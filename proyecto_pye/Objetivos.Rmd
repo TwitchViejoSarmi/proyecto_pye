@@ -5,6 +5,34 @@ output: html_document
 date: '2024-04-01'
 ---
 
+## Base de datos
+
+```{r}
+library(readxl)
+Base_Datos <- read.csv("Base de Datos/Datos.csv")
+```
+
+### Variables punto 1
+
+```{r}
+print(Base_Datos$PESO..Gramos.)
+print(Base_Datos$AREA.RESIDENCIA)
+```
+
+### Variables punto 2
+
+```{r}
+print(Base_Datos$SITIO.NACIMIENTO)
+print(Base_Datos$AREA.RESIDENCIA)
+```
+
+### Variables punto 3
+
+```{r}
+print(Base_Datos$PESO..Gramos.)
+print(Base_Datos$TALLA..Centímetros.)
+```
+
 ## Problema de Estudio
 
 Determinar los factores asociados con el peso al nacer de los recién nacidos en el Municipio de La Dorada durante los años 2021 y 2022.
