@@ -1,40 +1,34 @@
 library(readxl)
+library(dplyr)
 Base_Datos <- read.csv("Base de Datos/Datos.csv")
+Base_Datos$PESO..Gramos. <- gsub(",", ".", Base_Datos$PESO..Gramos.)
+Base_Datos$PESO..Gramos. <- as.numeric(Base_Datos$PESO..Gramos.)
+Base_Datos$TALLA..Centímetros. <- gsub(",", ".", Base_Datos$TALLA..Centímetros.)
+Base_Datos$TALLA..Centímetros. <- as.numeric(Base_Datos$TALLA..Centímetros.)
 Base_Datos <- subset(Base_Datos, PESO..Gramos. < 575) # Se hace limpieza de datos.
 
-
 # Variables punto 1.
-PESO <- gsub(",", ".", Base_Datos$PESO..Gramos.)
-PESO <- as.numeric(PESO)
+PESO <- Base_Datos$PESO..Gramos.
 
 # Gráfico 1.
 boxplot(PESO ~ Base_Datos$AREA.RESIDENCIA,
-        main = "PESO EN KILOGRAMOS DISTRIBUIDO POR AREA DE RESIDENCIA",
         xlab = "AREA DE RESIDENCIA",
         ylab = "PESO (KILOGRAMOS)")
 
 # Gráfico 2.
 PESO_C <- subset(Base_Datos, AREA.RESIDENCIA == "CABECERA MUNICIPAL")$PESO..Gramos.
-PESO_C <- gsub(",", ".", PESO_C)
-PESO_C <- as.numeric(PESO_C)
 
 His_C <- hist(PESO_C, plot = FALSE)
 
-print(His_C)
-
 PESO_CP <- subset(Base_Datos, AREA.RESIDENCIA == "CENTRO POBLADO (INSPECCIÓN, CORREGIMIENTO O CASERÍO)")$PESO..Gramos.
-PESO_CP <- gsub(",", ".", PESO_CP)
-PESO_CP <- as.numeric(PESO_CP)
 
 His_CP <- hist(PESO_CP, plot = FALSE)
 
 PESO_R <- subset(Base_Datos, AREA.RESIDENCIA == "RURAL DISPERSO")$PESO..Gramos.
-PESO_R <- gsub(",", ".", PESO_R)
-PESO_R <- as.numeric(PESO_R)
 
 His_R <- hist(PESO_R, plot = FALSE)
 
-plot(c(min(PESO), His_C$mids, max(PESO)), c(0, His_C$counts, 0), type = "b", col = "red", main = "PESO EN GRAMOS POR AREA DE RESIDENCIA", xlab = "PESO (g)", ylab = "FRECUENCIA")
+plot(c(min(PESO), His_C$mids, max(PESO)), c(0, His_C$counts, 0), type = "b", col = "red", xlab = "PESO (g)", ylab = "FRECUENCIA")
 
 lines(c(min(PESO), His_CP$mids, max(PESO)), c(0, His_CP$counts, 0), type = "b", col = "blue")
 
@@ -48,7 +42,6 @@ plot(c(0, His_C$mids),
      c(0, cumsum(His_C$counts)/sum(His_C$counts)),
      type = "b",
      col = "red",
-     main = "PESO EN GRAMOS DISTRIBUIDO POR AREA DE RESIDENCIA",
      xlab = "PESO (KILOGRAMOS)",
      ylab = "FRECUENCIA RELATIVA ACUMULADA")
 
@@ -64,18 +57,29 @@ lines(c(0, His_R$mids),
 legend("topleft", legend = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISPERSO"), 
        fill = c("red", "blue", "green"))
 
+tabla <- Base_Datos %>%
+  group_by(AREA.RESIDENCIA) %>%
+  summarise(count = n(),
+  media = round(mean(PESO..Gramos., na.rm = TRUE), digits = 2),
+  mediana = median(PESO..Gramos., na.rm = TRUE),
+  sd = round(sd(PESO..Gramos., na.rm = TRUE), digits = 2),
+  q1 = quantile(PESO..Gramos., probs = 0.25, na.rm = TRUE),
+  q3 = quantile(PESO..Gramos., probs = 0.75, na.rm = TRUE),
+  RIC = IQR(PESO..Gramos., na.rm = TRUE)
+  )
+print(tabla)
+
 # Variables punto 2.
 #print(Base_Datos$SITIO.NACIMIENTO)
 #print(Base_Datos$AREA.RESIDENCIA)
 
 tabla <- table(Base_Datos$TIPO.PARTO, Base_Datos$AREA.RESIDENCIA)
 
-tabla
+print(tabla)
 
 barplot(tabla, #prop.table(tabla),
         beside = TRUE,
         col = c("blue","red", 'green'),
-        main = "PESO EN GRAMOS DISTRIBUIDO POR AREA DE RESIDENCIA",
         xlab = "Area de residencia",
         ylab = "Cantidad de partos")
 legend("topright", legend = c("Cesarea", "Espontáneo", "Instrumentado"), 
@@ -87,11 +91,8 @@ legend("topright", legend = c("Cesarea", "Espontáneo", "Instrumentado"),
 #print(Base_Datos$PESO..Gramos.)
 #print(Base_Datos$TALLA..Centímetros.)
 
-TALLA <- gsub(",", ".", Base_Datos$TALLA..Centímetros.)
-TALLA <- as.numeric(TALLA)
-
-plot(PESO, TALLA, 
-     main = "RELACIÓN TALLA CONTRA EL PESO AL NACER",
+TALLA <- Base_Datos$TALLA..Centímetros.
+plot(PESO, TALLA,
      xlab = 'PESO (KILOGRAMOS)',
      ylab = 'TALLA (CENTIMETROS)')
 
