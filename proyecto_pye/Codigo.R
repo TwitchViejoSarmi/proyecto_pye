@@ -13,7 +13,8 @@ PESO <- Base_Datos$PESO..Gramos.
 # Gráfico 1.
 boxplot(PESO ~ Base_Datos$AREA.RESIDENCIA,
         xlab = "AREA DE RESIDENCIA",
-        ylab = "PESO (KILOGRAMOS)")
+        ylab = "PESO (KILOGRAMOS)",
+        names = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISPERSO"))
 
 # Gráfico 2.
 PESO_C <- subset(Base_Datos, AREA.RESIDENCIA == "CABECERA MUNICIPAL")$PESO..Gramos.
