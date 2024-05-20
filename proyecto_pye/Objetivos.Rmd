@@ -62,6 +62,16 @@ print(tabla)
 
 *Tabla 1: Resumen de datos extraídos para comparar pesos al nacer por área de residencia.*
 
+**Análisis Estadístico:**
+
+-   Para el caso de la media o promedio, se puede observar que hay unas diferencias muy pequeñas entre cada área de residencia de la madre del pequeño, siendo las que quedan más alejadas de la cabecera municipal en las que los infantes nacen con un peso promedio menor, es decir, los centros poblados y las zonas rurales dispersas.
+
+-   Para el caso de la mediana, se puede apreciar que tiene un valor aproximado casi idéntico al de la media para el caso de la cabecera municipal, por lo que se puede interpretar que los pesos de los pequeños cuyas madres viven allí, son relativamente simétricos. Por otra parte, para las otras áreas de residencia, varía un poco la mediana con la media, por lo que no son pesos tan simétricos como en la cabecera municipal.
+
+-   Para el caso de la desviación estándar, tanto la cabecera municipal como el centro poblado tienen la misma dispersión de valores de peso, mientras que para las zonas rurales, su desviación es menor. Esto puede interpretarse como que los pesos de los bebés que tienen madres que viven en zonas rurales son más cercanos al promedio que para los otros casos.
+
+-   Tanto para los cuartiles evaluados como para el RIC se tiene lo siguiente. Aproximadamente, el 25% de los bebés tiene un peso mayor cuando su madre vive en un Centro Poblado a comparación de los otros casos, mientras que aproximadamente el 75% de los bebés tienen un peso mayor cuando su madre vive en la Cabecera Municipal. Para el RIC, se puede observar que la Cabecera Municipal es la que tiene mayor rango entre las otras opciones.
+
 ### OBJETIVO 1: GRÁFICO DE CAJAS COMPARATIVO PESO VS ÁREA DE RESIDENCIA
 
 ```{r}
@@ -167,6 +177,12 @@ print(tabla)
 ```
 *Tabla 2: Tabla de frecuencias para el tipo de parto categorizado por área de residencia de la madre.*
 
+*Nota: La única estadística descriptiva que se ha podido encontrar en este caso y ha tenido relevancia para el objetivo ha sido la moda (interpretada en la tabla de frecuencias)*
+
+**Análisis Estadístico:**
+
+En este caso, se puede observar que, para todas las áreas de residencia, la mayor cantidad de partos se han realizado de manera espontánea, es decir, de manera natural. Por otra parte, se puede observar que se han presenciado, en general, muy pocos casos en los que se ha requerido de instrumentación para poder ayudar al bebé a salir del cuerpo de la madre. Sin embargo, han habido más casos de este estilo para las madres que viven en la Cabecera Municipal. Esto muestra que puede que no haya un verdadero impacto en el peso del recién nacido cuando se interviene en el parto de manera distinta, ya que las proporciones de los datos son bastante parecidas, aunque con mayor medida en la Cabecera Municipal.
+
 ### OBJETIVO 2: GRÁFICO DE BARRAS COMPARATIVO DEL TIPO DE PARTO CATEGORIZADO POR EL ÁREA DE RESIDENCIA
 
 ```{r}
@@ -193,6 +209,22 @@ legend("topright", legend = c("Cesárea", "Espontáneo", "Instrumentado"),
 -   Tanto en la **cabecera municipal** como en las **áreas rurales dispersas** y los **centros poblados** los partos espontáneos son los más frecuentes, seguidos por las cesáreas.
 
 -   Para las **cabeceras municipales** se registran una minima cantidad de partos instrumentados no superando aproximadamente los 50 partos mientras que en los **centros poblados** o **áreas rurales dispersas** es dato es casi nulo.
+
+### OBJETIVO 3: TABLA RESUMEN
+
+```{r}
+tabla <- Base_Datos %>%
+  summarise(
+  sd_peso = round(sd(PESO..Gramos., na.rm = TRUE), digits = 2),
+  sd_talla = round(sd(TALLA..Centímetros., na.rm = TRUE), digits = 2),
+  
+  correlacion = cor(PESO..Gramos., TALLA..Centímetros.)
+  )
+print(tabla)
+```
+**Análisis Estadístico:**
+
+Algo importante que se ha podido evidenciar, es que a diferencia de la desviación estándar para el peso, la de la talla de los bebés es muy superior, indicando que hay una mayor dispersión entre los datos tomados para las tallas en comparación con el peso. No obstante, se puede apreciar que ambas variables tienen correlación, aunque no es del todo fuerte, por lo que se puede decir que tienen una cierta relación lineal entre sus valores.
 
 ### OBJETIVO 3: GRÁFICO DE DISPERSIÓN DE PESO AL NACER DEL BEBÉ VS LA TALLA AL NACER DEL BEBÉ
 
