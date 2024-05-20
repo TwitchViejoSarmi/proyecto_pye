@@ -94,6 +94,16 @@ legend("topright", legend = c("Cesarea", "Espontáneo", "Instrumentado"),
 #print(Base_Datos$PESO..Gramos.)
 #print(Base_Datos$TALLA..Centímetros.)
 
+# Tabla.
+tabla <- Base_Datos %>%
+  summarise(
+    sd_peso = round(sd(PESO..Gramos., na.rm = TRUE), digits = 2),
+    sd_talla = round(sd(TALLA..Centímetros., na.rm = TRUE), digits = 2),
+    
+    correlacion = cor(PESO..Gramos., TALLA..Centímetros.)
+  )
+print(tabla)
+
 TALLA <- Base_Datos$TALLA..Centímetros.
 plot(PESO, TALLA,
      xlab = 'PESO (KILOGRAMOS)',
