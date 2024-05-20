@@ -1,8 +1,10 @@
 ---
-title: 'Avance 1 del Proyecto Probabiliad y Estadística'
-author: 'Alejandro Sarmiento Rivera y Juan Esteban Becerra Gutiérrez'
-output: html_document
-date: '2024-05-20'
+title: "Avance 1 del Proyecto Probabiliad y Estadística"
+author: "Alejandro Sarmiento Rivera y Juan Esteban Becerra Gutiérrez"
+date: "2024-05-20"
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ## Problema de Estudio
@@ -76,6 +78,8 @@ print(tabla)
 
 ```{r}
 # Gráfico 1.
+PESO <- Base_Datos$PESO..Gramos.
+
 par(mar = c(5, 3.9, 0.5, 0.5) + 0.1)
 boxplot(PESO ~ Base_Datos$AREA.RESIDENCIA,
         xlab = "ÁREA DE RESIDENCIA",
@@ -89,7 +93,7 @@ boxplot(PESO ~ Base_Datos$AREA.RESIDENCIA,
 
 **Apectos relevantes**
 
--   En el gráfico, se puede apreciar para la categoría de **Cabezera municipal** contiene más dispersión de los datos con respecto a las otras 2 categorías, al haber mayor presencia de datos atípicos. Además, en la misma categoría, hay un grupo considerable de bebés que nacen con peso menor al promedio (Ver Figura 1).
+-   En el gráfico, se puede apreciar para la categoría de **Cabezera municipal** y **Centro poblado** contienen una mayor dispersión de los datos con respecto a **Rural disperso**, al haber mayor presencia de datos atípicos. Además, en la misma categoría, hay un grupo considerable de bebés que nacen con peso menor al promedio (Ver Figura 1).
 -   Para las 3 categorías de **Área de residencia** los bebés nacidos en cada categoría poseen un peso al nacer mayor a aproximadamente 3 kilogramos y menor a aproximadamente 3.5 kilogramos (Ver Figura 1).
 -   Los 3 gráficos de cajas muestran que para todas las categorías de **Área de residencia**, el valor de sus medianas están dentro del mismo rango de 3 kilogramos a 3.5 kilogramos. Sin embargo, la mediana de la categoría **rural disperso** es ligeramente menor a las otras 2 categorías (Ver Figura n).
 -   Para la categoría de de **centro poblado** se puede apreciar una poca dispersión de los registros de los pesos de los bebés recién nacidos dentro de los limites de los mismos datos.
@@ -168,6 +172,10 @@ legend("topleft", legend = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISP
 
 -   Las curvas para las tres áreas alcanzan el 100% de la frecuencia acumulada muy cerca de los 4 kilogramos, indicando que este es el peso máximo observado en la muestra para todas las áreas de residencia. Esto también sugiere que los pesos al nacer mayores de 4 kilogramos son raros o inexistentes en esta muestra.
 
+### Análisis del objetivo 1
+
+De acuerdo con estos aspectos podemos decir que, en primer lugar, la gran mayoría de los bebés nacidos en el municipio de la Dorada en el año 2021 y 2022 nacieron en las **cabeceras municipales,** seguido de las zonas rurales dispersas y por último los **centros poblados.** Al ver los resultados de los datos, se puede apreciar que los pesos de los bebés nacidos en el municipio de la dorada no se ven afectados por el área de  ya que para todas las zonas los pesos de los infantes siempre tienden al mismo rango de 3kg a 4kg. Sin embargo, cabe destacar que la gran parte de los nacimientos en las cabeceras municipales se debe a que estas zonas contienen una gran cantidad y mejores servicios de salud comparados con otras zonas, por lo que, si se presenta un caso atípico de peso por razones de salud de la madre, los servicios estarán disponibles para atender la situación.
+
 ### OBJETIVO 2: TABLA DE FRECUENCIAS DEL TIPO DE PARTO CATEGORIZADO POR EL ÁREA DE RESIDENCIA
 
 ```{r}
@@ -175,6 +183,7 @@ tabla <- table(Base_Datos$TIPO.PARTO, Base_Datos$AREA.RESIDENCIA)
 colnames(tabla) <- c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISPERSO")
 print(tabla)
 ```
+
 *Tabla 2: Tabla de frecuencias para el tipo de parto categorizado por área de residencia de la madre.*
 
 *Nota: La única estadística descriptiva que se ha podido encontrar en este caso y ha tenido relevancia para el objetivo ha sido la moda (interpretada en la tabla de frecuencias)*
@@ -210,6 +219,10 @@ legend("topright", legend = c("Cesárea", "Espontáneo", "Instrumentado"),
 
 -   Para las **cabeceras municipales** se registran una minima cantidad de partos instrumentados no superando aproximadamente los 50 partos mientras que en los **centros poblados** o **áreas rurales dispersas** es dato es casi nulo.
 
+### Análisis del objetivo 2
+
+Con base en los aspectos relevantes, se puede apreciar que al igual que en el objetivo 1 la gran mayoría de los bebés nacidos en el municipio de la Dorada en el año 2021 y 2022 nacieron en las **cabeceras municipales,** seguido de las zonas rurales dispersas y por último los **centros poblados.** Además, los datos afirman que la gran parte de los nacimientos para todos los tipos de parto, se dieron mediante un **parto espontáneo** seguido de parto por **cesárea y** por último se presentan casos mínimos o nulos de partos **instrumentados.** Esto es posible ya que en las cabeceras municipales se debe a que estas zonas contienen una gran cantidad y mejores servicios de salud comparados con otras zonas. Complementando con el objetivo anterior (objetivo 1) se puede llegar a la conclusión de que el tipo de parto no afecta en una gran parte al peso del bebé.
+
 ### OBJETIVO 3: TABLA RESUMEN
 
 ```{r}
@@ -222,18 +235,19 @@ tabla <- Base_Datos %>%
   )
 print(tabla)
 ```
+
 **Análisis Estadístico:**
 
 Algo importante que se ha podido evidenciar, es que a diferencia de la desviación estándar para el peso, la de la talla de los bebés es muy superior, indicando que hay una mayor dispersión entre los datos tomados para las tallas en comparación con el peso. No obstante, se puede apreciar que ambas variables tienen correlación, aunque no es del todo fuerte, por lo que se puede decir que tienen una cierta relación lineal entre sus valores.
 
 ### OBJETIVO 3: GRÁFICO DE DISPERSIÓN DE PESO AL NACER DEL BEBÉ VS LA TALLA AL NACER DEL BEBÉ
 
-    ```{r}
-    TALLA <- Base_Datos$TALLA..Centímetros.
-    plot(PESO, TALLA,
-         xlab = 'PESO (KILOGRAMOS)',
-         ylab = 'TALLA (CENTIMETROS)')
-    ```
+```{r}
+TALLA <- Base_Datos$TALLA..Centímetros.
+plot(PESO, TALLA,
+     xlab = 'PESO (KILOGRAMOS)',
+     ylab = 'TALLA (CENTIMETROS)')
+```
 
 *Figura 5: Gráfico de Dispersión que permite observar la relación entre la talla y el peso del recién nacido.*
 
@@ -246,3 +260,7 @@ Algo importante que se ha podido evidenciar, es que a diferencia de la desviaci�
 -   Hay algunos puntos que se encuentran alejados del grupo principal de datos. Por ejemplo, hay bebés con pesos por debajo de 1.5 kg o por encima de 4.0 kg, y tallas por debajo de 40 cm o por encima de 55 cm. Estos outliers pueden indicar casos especiales o extremos que podrían ser relevantes para estudios adicionales.
 
 -   Aunque hay una tendencia positiva general, también hay una ligera pero considerable dispersión en los datos. Por ejemplo, para un peso dado, hay una variabilidad en la talla y viceversa. Esto indica que, aunque el peso y la talla están relacionados, otros factores también pueden influir en estas medidas al nacer.
+
+### Análisis del objetivo 3
+
+Respecto a los aspectos anteriores, la gran mayoría de los datos muestran que, los bebés que nacen con una talla en el rango de 45 a 55 centímetros tienen un peso al nacer en el rango de 2.5 a 4 kilogramos. Además, de acuerdo con la gráfica anterior (Ver figura 5), se puede ver que los datos se comportan de manera proporcional unos a otros, es decir, que a medida que aumenta el peso de nacimiento del bebé, aumenta la talla del nacimiento del bebé.
