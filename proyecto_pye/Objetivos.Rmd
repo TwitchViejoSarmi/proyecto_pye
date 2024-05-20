@@ -1,5 +1,5 @@
 ---
-title: "Avance 1 del Proyecto Probabiliad y Estadística"
+title: "Avance 2 del Proyecto Probabiliad y Estadística"
 author: "Alejandro Sarmiento Rivera y Juan Esteban Becerra Gutiérrez"
 date: "2024-05-20"
 output:
@@ -17,14 +17,14 @@ Analizar la influencia de diversos factores médicos y del entorno en el peso al
 
 ## Objetivos Específicos
 
--   Analizar la distribución del peso al nacer por categorías de variables de localización, en este caso, por Área de Residencia (CABECERA MUNICIPAL/CENTRO POBLADO/RURAL DISPERSO).
--   Comparar las proporciones de sitios de nacimiento del infante (DOMICILIO/INSTITUCIÓN DE SALUD) por centros poblados para que tenga sentido con el objetivo anterior.
+-   Analizar la distribución del peso al nacer por categorías de variables de localización, en este caso, por Área de Residencia de la madre (CABECERA MUNICIPAL/CENTRO POBLADO/RURAL DISPERSO).
+-   Comparar las proporciones de Área de Residencia de la madre (CABECERA MUNICIPAL/CENTRO POBLADO/RURAL DISPERSO) por tipo de parto del bebé (CESÁREA/ESPONTÁNEO/INSTRUMENTADO) para que tenga sentido con el objetivo anterior.
 -   Estudiar si existe una relación lineal entre el peso al nacer y la talla al nacer del infante.
 
 ## Variables de análisis:
 
 1.  Se va a analizar el peso al nacer de los bebés por Área de Residencia. Esto permitirá estudiar la influencia de la localización con el peso.
-2.  Se va a categorizar el tipo de parto del bebé (CESAREA/ESPONTÁNEO/INSTRUMENTADO) por las mismas Áreas de Residencia. Esto permite evaluar la posibilidad de si el tipo de parto pueda afectar el peso final del infante. También, se permitirá ver cuáles áreas se registra cada tipo de parto con el objetivo de de ver en que localización se aplica dicho tipo de parto.
+2.  Se va a categorizar el tipo de parto del bebé (CESÁREA/ESPONTÁNEO/INSTRUMENTADO) por las mismas Áreas de Residencia. Esto permite evaluar la posibilidad de si el tipo de parto pueda afectar el peso final del infante. También, permitirá ver en cuáles áreas se registra cada tipo de parto con el objetivo de de ver en que localización se aplica dicho tipo de parto.
 3.  Se quiere estudiar la existencia de una relación lineal entre el peso y la talla del bebé. Esto permitirá aclarar si hay alguna relación entre el peso y la talla y/o viceversa.
 
 ## Carga de Datos
@@ -45,7 +45,7 @@ Base_Datos$TALLA..Centímetros. <- as.numeric(Base_Datos$TALLA..Centímetros.)
 Base_Datos <- subset(Base_Datos, PESO..Gramos. < 575) # Se hace limpieza de datos.
 ```
 
-Primero, se decidió trabajar el peso en kilogramos en vez de gramos. Esto debido a que, en la Base de Datos, el formato usado para escribir los pesos estaba en cadena de texto y no como númerico. Para que R hiciera una conversión más sencilla, era necesario pasar las "," a los "." y de ahí convertirlos a númericos. Para el caso de la talla sucedió algo parecido, pero como ya se encontraba en centímetros no hubo mucha complicación con la conversión. También, se tuvieron que eliminar los pesos que fueran superiores a 575 ya que, originalmente, los datos eran valores muy pequeños. Cuando se realizó el cambio de g a kg, no se hizo correctamente para estos datos que eran incorrectos, por lo que se cambió a eliminar los que fueran superiores a 575.
+Primero, se decidió trabajar el peso en kilogramos en vez de gramos. Esto debido a que, en la Base de Datos, el formato usado para escribir los pesos estaba en cadena de texto y no como númerico. Para que R hiciera una conversión más sencilla, era necesario pasar las "," a los "." y de ahí convertirlos a númericos. Para el caso de la talla sucedió algo parecido, pero como ya se encontraba en centímetros, no hubo mucha complicación con la conversión. También, se tuvieron que eliminar los pesos que fueran superiores a 575 ya que, originalmente, los datos eran valores muy pequeños. Cuando se realizó el cambio de g a kg, no se hizo correctamente para estos datos que eran incorrectos, por lo que se cambió a eliminar los que fueran superiores a 575.
 
 ### OBJETIVO 1: TABLA RESUMEN
 
@@ -94,9 +94,9 @@ boxplot(PESO ~ Base_Datos$AREA.RESIDENCIA,
 **Apectos relevantes**
 
 -   En el gráfico, se puede apreciar para la categoría de **Cabezera municipal** y **Centro poblado** contienen una mayor dispersión de los datos con respecto a **Rural disperso**, al haber mayor presencia de datos atípicos. Además, en la misma categoría, hay un grupo considerable de bebés que nacen con peso menor al promedio (Ver Figura 1).
--   Para las 3 categorías de **Área de residencia** los bebés nacidos en cada categoría poseen un peso al nacer mayor a aproximadamente 3 kilogramos y menor a aproximadamente 3.5 kilogramos (Ver Figura 1).
--   Los 3 gráficos de cajas muestran que para todas las categorías de **Área de residencia**, el valor de sus medianas están dentro del mismo rango de 3 kilogramos a 3.5 kilogramos. Sin embargo, la mediana de la categoría **rural disperso** es ligeramente menor a las otras 2 categorías (Ver Figura n).
--   Para la categoría de de **centro poblado** se puede apreciar una poca dispersión de los registros de los pesos de los bebés recién nacidos dentro de los limites de los mismos datos.
+-   Para las 3 categorías de **Área de residencia,** los bebés nacidos en cada categoría poseen un peso al nacer mayor a aproximadamente 3 kilogramos y menor a aproximadamente 3.5 kilogramos (Ver Figura 1).
+-   Los 3 gráficos de cajas muestran que para todas las categorías de **Área de residencia**, el valor de sus medianas están dentro del mismo rango de 3 kilogramos a 3.5 kilogramos. Sin embargo, la mediana de la categoría **rural disperso** es ligeramente menor a las otras 2 categorías (Ver Figura 1).
+-   Para la categoría de **centro poblado,** se puede apreciar una poca dispersión de los registros de los pesos de los bebés recién nacidos dentro de los limites de los mismos datos.
 
 ### OBJETIVO 1: POLÍGONO DE FRECUENCIAS COMPARATIVO DE PESOS AL NACER POR ÁREA DE RESIDENCIA
 
@@ -128,13 +128,13 @@ legend("topleft", legend = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISP
 
 **Apectos relevantes**
 
--   La gráfica muestra que para todas las categorías de **Área de residencia**, el valor de sus medianas están dentro del mismo rango de 3 kilogramos a 3 kilogramos debido a que el comportamiento de las 3 categorías se comporta de manera simetrica. Además, con lo anterior, se puede decir que, debido a que todos poseen aproximadamente la misma media, el valor medio o media sea similar para todas las categorias.
+-   La gráfica muestra que para todas las categorías de **Área de residencia**, el valor de sus medianas están dentro del mismo rango de 3 kilogramos a 3.5 kilogramos (Ver Figura 2) , debido a que el comportamiento de las 3 categorías se comporta de manera simétrica. Además, con lo anterior, se puede decir que, debido a que todos poseen aproximadamente la misma media, el valor medio o media sea similar para todas las categorias (Ver Tabla 1).
 
--   Se observa una gran diferencia en la distribución de la talla de los pesos por **Área de residencia.** Se observa que la categoría **Cabezera municipal** posee una mayor frecuencia para los pesos mayores a 3 kilogramos y menores a 4 kilogramos.
+-   Se observa una gran diferencia en la distribución de la talla de los pesos por **Área de residencia.** Se observa que la categoría **Cabezera municipal** posee una mayor frecuencia para los pesos mayores a 3 kilogramos y menores a 4 kilogramos (Ver Figura 2).
 
--   En el gráfico se puede apreciar que tanto **Centro poblado** y **Rural disperso** poseen una distribución muy similar por lo que se puede decir que sus media
+-   En el gráfico se puede apreciar que tanto **Centro poblado** y **Rural disperso** poseen una distribución muy similar por lo que se puede decir que sus medias son parecidas (Ver Figura 2 y Tabla 1).
 
--   Se puede denotar gracias a la gráfica que para las 3 categorias, tienen un ligero cesgo hacia la izquierda, es decir los datos pesos al nacer se concentran más en el rango de 2 kilogramos a 4 kilogramos
+-   Se puede denotar gracias a la gráfica que para las 3 categorías, tienen un ligero sesgo hacia la izquierda. Es decir, los datos pesos al nacer se concentran más en el rango de 2 kilogramos a 4 kilogramos (Ver Figura 2).
 
 ### OBJETIVO 1: OJIVA COMPARATIVA DE PESOS AL NACER POR ÁREA DE RESIDENCIA
 
@@ -164,17 +164,17 @@ legend("topleft", legend = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISP
 
 **Apectos relevantes**
 
--   Las curvas de frecuencia relativa acumulada para las tres áreas de residencia (cabecera municipal, centro poblado, y rural disperso) son muy similares, especialmente en la región de 2 a 4 kilogramos. Esto sugiere que no hay grandes diferencias en la distribución del peso al nacer entre estas áreas.
+-   Las curvas de frecuencia relativa acumulada para las tres áreas de residencia (cabecera municipal, centro poblado, y rural disperso) son muy similares, especialmente en la región de 2 a 4 kilogramos. Esto sugiere que no hay grandes diferencias en la distribución del peso al nacer entre estas áreas (Ver Figura 3).
 
--   Todas las curvas muestran un aumento pronunciado en la frecuencia acumulada en el rango de aproximadamente de 2.5 a 3.5 kilogramos. Esto indica que la mayoría de los nacimientos ocurren en este rango de peso, lo cual es consistente con el peso promedio al nacer esperado.
+-   Todas las curvas muestran un aumento pronunciado en la frecuencia acumulada en el rango de aproximadamente de 2.5 a 3.5 kilogramos. Esto indica que la mayoría de los nacimientos ocurren en este rango de peso, lo cual es consistente con el peso promedio al nacer esperado (Ver Figura 3 y Tabla 1).
 
--   La distribución del peso al nacer es más desigual en la **Cabezera municipal** que en el **Centro poblado** y en el **Área rural disperso**.
+-   La distribución del peso al nacer es más desigual en la **Cabezera municipal** que en el **Centro poblado** y en el **Área rural disperso** (Ver Figura 3).
 
--   Las curvas para las tres áreas alcanzan el 100% de la frecuencia acumulada muy cerca de los 4 kilogramos, indicando que este es el peso máximo observado en la muestra para todas las áreas de residencia. Esto también sugiere que los pesos al nacer mayores de 4 kilogramos son raros o inexistentes en esta muestra.
+-   Las curvas para las tres áreas alcanzan el 100% de la frecuencia acumulada muy cerca de los 4 kilogramos (Ver Figura 3), indicando que este es el peso máximo observado en la muestra para todas las áreas de residencia. Esto también sugiere que los pesos al nacer mayores de 4 kilogramos son raros o inexistentes en esta muestra.
 
 ### Análisis del objetivo 1
 
-De acuerdo con estos aspectos podemos decir que, en primer lugar, la gran mayoría de los bebés nacidos en el municipio de la Dorada en el año 2021 y 2022 nacieron en las **cabeceras municipales,** seguido de las zonas rurales dispersas y por último los **centros poblados.** Al ver los resultados de los datos, se puede apreciar que los pesos de los bebés nacidos en el municipio de la dorada no se ven afectados por el área de  ya que para todas las zonas los pesos de los infantes siempre tienden al mismo rango de 3kg a 4kg. Sin embargo, cabe destacar que la gran parte de los nacimientos en las cabeceras municipales se debe a que estas zonas contienen una gran cantidad y mejores servicios de salud comparados con otras zonas, por lo que, si se presenta un caso atípico de peso por razones de salud de la madre, los servicios estarán disponibles para atender la situación.
+De acuerdo con estos aspectos podemos decir que, en primer lugar, la gran mayoría de los bebés nacidos en el municipio de la Dorada en el año 2021 y 2022 nacieron en las **cabeceras municipales,** seguido de las **zonas rurales dispersas** y por último los **centros poblados.** Al ver los resultados de los datos, se puede apreciar que los pesos de los bebés nacidos en el municipio de la dorada no se ven afectados por el área de residencia de la madre, ya que para todas las zonas, los pesos de los infantes siempre tienden al mismo rango de 3kg a 4kg. Sin embargo, cabe destacar que la gran parte de los nacimientos en las cabeceras municipales se debe a que estas zonas contienen una gran cantidad y mejores servicios de salud comparados con otras zonas, por lo que, si se presenta un caso atípico de peso por razones de salud de la madre, los servicios estarán disponibles para atender la situación.
 
 ### OBJETIVO 2: TABLA DE FRECUENCIAS DEL TIPO DE PARTO CATEGORIZADO POR EL ÁREA DE RESIDENCIA
 
@@ -211,17 +211,17 @@ legend("topright", legend = c("Cesárea", "Espontáneo", "Instrumentado"),
 
 **Apectos relevantes**
 
--   En los **Centros poblados** , los partos espontáneos son igualmente comunes que los partos por cesarea aunque estos últimos se presentan en una ligera menor cantidad.
+-   En los **Centros poblados** , los partos espontáneos son parecidamente comunes que los partos por cesarea aunque estos últimos se presentan en una ligera menor cantidad (Ver Figura 4 y Tabla 2).
 
--   La **cabecera municipal** tiene una mayor cantidad total de partos en comparación con las **áreas rurales dispersas** y los **centros poblados**.
+-   La **cabecera municipal** tiene una mayor cantidad total de partos en comparación con las **áreas rurales dispersas** y los **centros poblados** (Ver Figura 4 y Tabla 2).
 
--   Tanto en la **cabecera municipal** como en las **áreas rurales dispersas** y los **centros poblados** los partos espontáneos son los más frecuentes, seguidos por las cesáreas.
+-   Tanto en la **cabecera municipal** como en las **áreas rurales dispersas** y los **centros poblados** los partos espontáneos son los más frecuentes, seguidos por las cesáreas (Ver Figura 4 y Tabla 2).
 
--   Para las **cabeceras municipales** se registran una minima cantidad de partos instrumentados no superando aproximadamente los 50 partos mientras que en los **centros poblados** o **áreas rurales dispersas** es dato es casi nulo.
+-   Para las **cabeceras municipales** se registran una minima cantidad de partos instrumentados no superando aproximadamente los 13 partos mientras que en los **centros poblados** o **áreas rurales dispersas** es dato es casi nulo (Ver Figura 4 y Tabla 2).
 
 ### Análisis del objetivo 2
 
-Con base en los aspectos relevantes, se puede apreciar que al igual que en el objetivo 1 la gran mayoría de los bebés nacidos en el municipio de la Dorada en el año 2021 y 2022 nacieron en las **cabeceras municipales,** seguido de las zonas rurales dispersas y por último los **centros poblados.** Además, los datos afirman que la gran parte de los nacimientos para todos los tipos de parto, se dieron mediante un **parto espontáneo** seguido de parto por **cesárea y** por último se presentan casos mínimos o nulos de partos **instrumentados.** Esto es posible ya que en las cabeceras municipales se debe a que estas zonas contienen una gran cantidad y mejores servicios de salud comparados con otras zonas. Complementando con el objetivo anterior (objetivo 1) se puede llegar a la conclusión de que el tipo de parto no afecta en una gran parte al peso del bebé.
+Con base en los aspectos relevantes, se puede apreciar que, al igual que en el objetivo 1, la gran mayoría de los bebés nacidos en el municipio de la Dorada en el año 2021 y 2022 nacieron en las **cabeceras municipales,** seguido de las **zonas rurales dispersas** y por último los **centros poblados.** Además, los datos afirman que la gran parte de los nacimientos para todos los tipos de parto, se dieron mediante un **parto espontáneo** seguido de parto por **cesárea y,** por último, se presentan casos mínimos o nulos de partos **instrumentados.** Esto es posible ya que las cabeceras municipales contienen una gran cantidad de instrumentación y mejores servicios de salud comparados con otras zonas. Complementando con el objetivo anterior (objetivo 1), se puede llegar a la conclusión de que el tipo de parto no afecta en una gran parte al peso del bebé.
 
 ### OBJETIVO 3: TABLA RESUMEN
 
@@ -253,13 +253,13 @@ plot(PESO, TALLA,
 
 **Aspectos relevantes**
 
--   El gráfico muestra una tendencia general positiva, lo que indica que a medida que aumenta el peso al nacer del bebé, también tiende a aumentar su talla. Este tipo de relación sugiere que los bebés más pesados tienden a ser más largos.
+-   El gráfico muestra una tendencia general positiva, lo que indica que a medida que aumenta el peso al nacer del bebé, también tiende a aumentar su talla. Este tipo de relación sugiere que los bebés más pesados tienden a ser más largos (Ver Figura 5).
 
--   La mayoría de los datos se agrupan entre los pesos de 2.5 a 4 kilogramos y las tallas de 45 a 55 centímetros. Esto sugiere que la mayoría de los bebés en la muestra nacen con estos pesos y tallas.
+-   La mayoría de los datos se agrupan entre los pesos de 2.5 a 4 kilogramos y las tallas de 45 a 55 centímetros (Ver Figura 5). Esto sugiere que la mayoría de los bebés en la muestra nacen con estos pesos y tallas.
 
--   Hay algunos puntos que se encuentran alejados del grupo principal de datos. Por ejemplo, hay bebés con pesos por debajo de 1.5 kg o por encima de 4.0 kg, y tallas por debajo de 40 cm o por encima de 55 cm. Estos outliers pueden indicar casos especiales o extremos que podrían ser relevantes para estudios adicionales.
+-   Hay algunos puntos que se encuentran alejados del grupo principal de datos. Por ejemplo, hay bebés con pesos por debajo de 1.5 kg o por encima de 4.0 kg, y tallas por debajo de 40 cm o por encima de 55 cm (Ver Figura 5). Estos outliners pueden indicar casos especiales o extremos que podrían ser relevantes para estudios adicionales.
 
--   Aunque hay una tendencia positiva general, también hay una ligera pero considerable dispersión en los datos. Por ejemplo, para un peso dado, hay una variabilidad en la talla y viceversa. Esto indica que, aunque el peso y la talla están relacionados, otros factores también pueden influir en estas medidas al nacer.
+-   Aunque hay una tendencia positiva general, también hay una ligera pero considerable dispersión en los datos. Por ejemplo, para un peso dado, hay una variabilidad en la talla y viceversa. Esto indica que, aunque el peso y la talla están relacionados, otros factores también pueden influir en estas medidas al nacer (Ver Tabla 3).
 
 ### Análisis del objetivo 3
 
