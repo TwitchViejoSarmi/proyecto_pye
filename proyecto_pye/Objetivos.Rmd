@@ -45,7 +45,7 @@ Base_Datos$TALLA..Centímetros. <- as.numeric(Base_Datos$TALLA..Centímetros.)
 Base_Datos <- subset(Base_Datos, PESO..Gramos. < 575) # Se hace limpieza de datos.
 ```
 
-Primero, se decidió trabajar el peso en kilogramos en vez de gramos. Esto debido a que, en la Base de Datos, el formato usado para escribir los pesos estaba en cadena de texto y no como númerico. Para que R hiciera una conversión más sencilla, era necesario pasar las "," a los "." y de ahí convertirlos a númericos. Para el caso de la talla sucedió algo parecido, pero como ya se encontraba es centímetros no hubo mucha complicación con la conversión. También, se tuvieron que eliminar los pesos que fueran superiores a 575 ya que, originalmente, los datos eran valores muy pequeños. Cuando se realizó el cambio de g a kg, no se hizo correctamente para estos datos que eran incorrectos, por lo que se cambió a eliminar los que fueran superiores a 575.
+Primero, se decidió trabajar el peso en kilogramos en vez de gramos. Esto debido a que, en la Base de Datos, el formato usado para escribir los pesos estaba en cadena de texto y no como númerico. Para que R hiciera una conversión más sencilla, era necesario pasar las "," a los "." y de ahí convertirlos a númericos. Para el caso de la talla sucedió algo parecido, pero como ya se encontraba en centímetros no hubo mucha complicación con la conversión. También, se tuvieron que eliminar los pesos que fueran superiores a 575 ya que, originalmente, los datos eran valores muy pequeños. Cuando se realizó el cambio de g a kg, no se hizo correctamente para estos datos que eran incorrectos, por lo que se cambió a eliminar los que fueran superiores a 575.
 
 ### OBJETIVO 1: TABLA RESUMEN
 
