@@ -58,10 +58,10 @@ lines(c(0, His_R$mids),
 legend("topleft", legend = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISPERSO"), 
        fill = c("red", "blue", "green"))
 
+# Tabla.
 tabla <- Base_Datos %>%
   group_by(AREA.RESIDENCIA) %>%
-  summarise(count = n(),
-  media = round(mean(PESO..Gramos., na.rm = TRUE), digits = 2),
+  summarise(media = round(mean(PESO..Gramos., na.rm = TRUE), digits = 2),
   mediana = median(PESO..Gramos., na.rm = TRUE),
   sd = round(sd(PESO..Gramos., na.rm = TRUE), digits = 2),
   q1 = quantile(PESO..Gramos., probs = 0.25, na.rm = TRUE),
@@ -74,10 +74,12 @@ print(tabla)
 #print(Base_Datos$SITIO.NACIMIENTO)
 #print(Base_Datos$AREA.RESIDENCIA)
 
+# Tabla.
 tabla <- table(Base_Datos$TIPO.PARTO, Base_Datos$AREA.RESIDENCIA)
-
+colnames(tabla) <- c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISPERSO")
 print(tabla)
 
+# Gráfico.
 barplot(tabla, #prop.table(tabla),
         beside = TRUE,
         col = c("blue","red", 'green'),
