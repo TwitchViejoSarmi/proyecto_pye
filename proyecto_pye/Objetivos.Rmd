@@ -32,6 +32,9 @@ Analizar la influencia de diversos factores médicos y del entorno en el peso al
 ```{r}
 library(readxl)
 library(dplyr)
+library(ggplot2)
+library(lmtest)
+library(car)
 Base_Datos <- read.csv("Base de Datos/Datos.csv")
 ```
 
@@ -130,7 +133,7 @@ legend("topleft", legend = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISP
 
 -   La gráfica muestra que para todas las categorías de **Área de residencia**, el valor de sus medianas están dentro del mismo rango de 3 kilogramos a 3.5 kilogramos (Ver Figura 2) , debido a que el comportamiento de las 3 categorías se comporta de manera simétrica. Además, con lo anterior, se puede decir que, debido a que todos poseen aproximadamente la misma media, el valor medio o media sea similar para todas las categorias (Ver Tabla 1).
 
--   Se observa una gran diferencia en la distribución de la talla de los pesos por **Área de residencia.** Se observa que la categoría **Cabezera municipal** posee una mayor frecuencia para los pesos mayores a 3 kilogramos y menores a 4 kilogramos (Ver Figura 2).
+-   Se observa una gran diferencia en la distribución de la talla de los pesos por **Área de residencia.** Se observa que la categoría **Cabezera municipal** posee una mayor frecuencia para los pesos mayores a 3 kilogramos y menores a 4 kilogramos (Ver Figura 2) cuyo valor es mayor a 500 bebés.
 
 -   En el gráfico se puede apreciar que tanto **Centro poblado** y **Rural disperso** poseen una distribución muy similar por lo que se puede decir que sus medias son parecidas (Ver Figura 2 y Tabla 1).
 
@@ -166,7 +169,7 @@ legend("topleft", legend = c("CABECERA MUNICIPAL", "CENTRO POBLADO", "RURAL DISP
 
 -   Las curvas de frecuencia relativa acumulada para las tres áreas de residencia (cabecera municipal, centro poblado, y rural disperso) son muy similares, especialmente en la región de 2 a 4 kilogramos. Esto sugiere que no hay grandes diferencias en la distribución del peso al nacer entre estas áreas (Ver Figura 3).
 
--   Todas las curvas muestran un aumento pronunciado en la frecuencia acumulada en el rango de aproximadamente de 2.5 a 3.5 kilogramos. Esto indica que la mayoría de los nacimientos ocurren en este rango de peso, lo cual es consistente con el peso promedio al nacer esperado (Ver Figura 3 y Tabla 1).
+-   Todas las curvas muestran un aumento pronunciado en la frecuencia acumulada en el rango de aproximadamente de 2 a 4 kilogramos. Esto indica que la mayoría de los nacimientos ocurren en este rango de peso, lo cual es consistente con el peso promedio al nacer esperado (Ver Figura 3 y Tabla 1).
 
 -   La distribución del peso al nacer es más desigual en la **Cabezera municipal** que en el **Centro poblado** y en el **Área rural disperso** (Ver Figura 3).
 
@@ -251,6 +254,14 @@ plot(PESO, TALLA,
 
 *Figura 5: Gráfico de Dispersión que permite observar la relación entre la talla y el peso del recién nacido.*
 
+### Coeficiente de correlación
+
+```{r}
+print(cor(PESO, TALLA))
+```
+
+Con un coeficiente de correlación de 0.66 de la **talla al nacer** y el **peso al nacer**, se puede decir que existe una relación entre los 2 datos presentados, es decir, que entre mayor sea el **peso al nacer** mayor será la **talla al nacer**.
+
 **Aspectos relevantes**
 
 -   El gráfico muestra una tendencia general positiva, lo que indica que a medida que aumenta el peso al nacer del bebé, también tiende a aumentar su talla. Este tipo de relación sugiere que los bebés más pesados tienden a ser más largos (Ver Figura 5).
@@ -260,6 +271,90 @@ plot(PESO, TALLA,
 -   Hay algunos puntos que se encuentran alejados del grupo principal de datos. Por ejemplo, hay bebés con pesos por debajo de 1.5 kg o por encima de 4.0 kg, y tallas por debajo de 40 cm o por encima de 55 cm (Ver Figura 5). Estos outliners pueden indicar casos especiales o extremos que podrían ser relevantes para estudios adicionales.
 
 -   Aunque hay una tendencia positiva general, también hay una ligera pero considerable dispersión en los datos. Por ejemplo, para un peso dado, hay una variabilidad en la talla y viceversa. Esto indica que, aunque el peso y la talla están relacionados, otros factores también pueden influir en estas medidas al nacer (Ver Tabla 3).
+
+## Objetivo 3: Análisis de regresión lineal
+
+### Hipótesis
+
+-   $H_0:$ Es una regresión lineal
+
+-   $H_1:$ No es una regresión lineal
+
+### Cálculo del modelo
+
+```{r}
+#Data frame
+datos <- data.frame(TALLA, PESO)
+
+Modelo <- lm(PESO ~ TALLA, datos)
+
+summary(Modelo)
+```
+
+De las salidas anteriores se puede extraer que:
+
+La primera columna (Estimate) devuelve el valor estimado para los dos parámetros de la ecuación del modelo lineal($\beta_0$ y $\beta_1$) que equivalen a la ordenada en el origen y la pendiente.
+
+El valor de $R^2$ indica que el modelo calculado explica el 44.13% de la variabilidad presente en la variable respuesta (PESO) mediante la variable independiente (TALLA).
+
+El p-value obtenido en el test F ($2.2 \times 10^{-16}$) determina que sí es significativamente superior la varianza explicada por el modelo en comparación a la varianza total. Es el parámetro que determina si el modelo es significativo y por lo tanto se puede aceptar.
+
+El modelo lineal generado sigue la ecuación runs $y= -3.671796 + 0.138513$ . Es decir, por cada kilogramo que se incrementa, la talla al nacer aumenta en promedio 0.6305 unidades.
+
+## Gráfica del modelo aproximado
+
+```{r}
+# ----- Gráfica del modelo
+
+ggplot(data = datos, mapping = aes(x = PESO, y = TALLA)) +
+  geom_point(color = "firebrick", size = 2) +
+  labs(title  =  'PESO(KILOGRAMOS)', x  =  'TALLA(CENTIMETROS)') +
+  geom_smooth(method = "lm", se = FALSE, color = "black")
+```
+
+*Figura 6: Gráfico de Dispersión con una aproximación lineal que se ajusta a los datos.*
+
+## Validación de los supuestos
+
+Para validad los supuestos del modelo, se debe combinar dos tipos de pruebas: gráficas y formales. Las pruebas formales son pruebas de hipótesis estadísticas que simplemente ayudan a validar, con cierta probabilidad, una hipótesis. El criterio del valor P indica que, si $P > \alpha$ se rechaza $H_0$.
+
+### Normalidad en los errores
+
+#### Hipótesis
+
+-   $H_0: \epsilon$ se distribuye normal
+
+-   $H_1 \epsilon$ no se distribuye normal
+
+```{r}
+shapiro.test(Modelo$residuals)
+```
+
+```{r}
+qqPlot(Modelo$residuals)
+```
+
+*Figura 7: .*
+
+### Homocedasticidad (varianza constante en los errores)
+
+Prueba de hipótesis para valdiar la homogeneidad en los errores:
+
+#### Hipótesis
+
+-   $H_0: \epsilon$ son homogéneos
+
+-   $H_1 \epsilon$ no son homogéneos
+
+```{r}
+bptest(Modelo)
+```
+
+```{r}
+ggplot(data = datos, aes(Modelo$fitted.values, Modelo$residuals)) +
+    geom_point() + geom_smooth(color = "firebrick")+ geom_hline(yintercept = 0) +
+    theme_bw()
+```
 
 ### Análisis del objetivo 3
 
