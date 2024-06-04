@@ -1,7 +1,7 @@
 ---
-title: "Avance 2 del Proyecto Probabiliad y Estadística"
+title: "Avance 3 del Proyecto Probabiliad y Estadística"
 author: "Alejandro Sarmiento Rivera y Juan Esteban Becerra Gutiérrez"
-date: "2024-05-20"
+date: "2024-06-05"
 output:
   html_document: default
   pdf_document: default
@@ -137,6 +137,7 @@ print(His_CP)
 print("TABLA DE FRECUENCIAS RURAL DISPERSO")
 print(His_R)
 ```
+
 *Tabla 2: Tablas de Frecuencia de cada una de las categorías*
 
 **Nota:** Como tal solo nos interesa el break y el count. El resto de los valores por favor no tenerlos en cuenta ya que no sabemos cómo eliminarlos.
@@ -193,43 +194,211 @@ De acuerdo con estos aspectos podemos decir que, en primer lugar, la gran mayor�
 
 ### OBJETIVO 1: PRUEBAS DE HIPÓTESIS
 
-Como se desea observar la influencia del Área de Residencia en el peso de un recién nacido, es indispensable estudiar la relación que tengan las poblaciones evaluadas con ayuda de las muestras obtenidas. Inicialmente, se tienen tres poblaciones, por lo que se categorizaron tres Áreas de Residencia. Para poder aplicar una evaluación de los datos, es fundamental corroborar que se distribuyen normalmente. Por ello:
+Como se desea observar la influencia del Área de Residencia en el peso de un recién nacido, es indispensable estudiar la relación que tengan las poblaciones evaluadas con ayuda de las muestras obtenidas. Inicialmente, se tienen tres poblaciones, por lo que se categorizaron tres Áreas de Residencia. La hipótesis que se tiene respecto a la investigación es que el peso de los recién nacidos cuyas madres vivan en el área **Rural Dispersa** tengan un peso menor respecto a las otras categorías, al ser una zona más apartada de las clínicas y hospitales. De esta manera, es importante comprobar si:
 
-#### SHAPIRO-WILK CABECERA MUNICIPAL:
+**1. El peso de los bebés cuyas madres vivan en una área correspondiente a Rural Disperso sea menor a la del Centro Poblado:**
 
-Se tienen entonces las siguientes Hipótesis:
+Se tienen los siguientes datos:
 
--   $H_0: \epsilon_i$ se distribuye normal
+$X_1$ = Peso en kilogramos de los bebés cuyas madres viven en el área correspondiente a **Rural Disperso**.
 
--   $H_1 \epsilon_i$ no se distribuye normal
+$X_2$ = Peso en kilogramos de los bebés cuyas madres viven en el **Centro Poblado**.
 
-```{r}
-shapiro.test(PESO_C)
-```
-
-#### SHAPIRO-WILK CENTRO POBLADO:
-
-Se tienen entonces las siguientes Hipótesis:
-
--   $H_0: \epsilon_i$ se distribuye normal
-
--   $H_1 \epsilon_i$ no se distribuye normal
+$\alpha = 0.05$ (Por defecto)
 
 ```{r}
-shapiro.test(PESO_CP)
+X1 <- subset(Base_Datos, AREA.RESIDENCIA == "RURAL DISPERSO")$PESO..Gramos.
+n1 <- length(X1)
+varX1 <- mean(X1)
+S1 <- sd(X1)
+
+X2 <- subset(Base_Datos, AREA.RESIDENCIA == "CENTRO POBLADO (INSPECCIÓN, CORREGIMIENTO O CASERÍO)")$PESO..Gramos.
+n2 <- length(X2)
+varX2 <- mean(X2)
+S2 <- sd(X2)
+
+cat("n1 = ", n1, "\n")
+cat("varX1 = ", varX1, "\n")
+cat("S1 = ", S1, "\n")
+
+cat("n2 = ", n2, "\n")
+cat("varX2 = ", varX2, "\n")
+cat("S2 = ", S2, "\n")
 ```
 
-#### SHAPIRO-WILK RURAL DISPERSO:
+Como $n_1 \geq 30$ y $n_2 \geq 30$, se puede asumir que $X_1 \sim Normal(\mu_1, \sigma_1)$ y $X_2 \sim Normal(\mu_2, \sigma_2)$. Para saber cómo proceder, el fundamental primeramente comprobar si $\sigma_1^2 = \sigma_2^2$. Por lo que:
 
-Se tienen entonces las siguientes Hipótesis:
+#### $¿\sigma_1^2 = \sigma_2^2?$ = $¿\frac{\sigma_1^2}{\sigma_2^2} = 1?$:
 
--   $H_0: \epsilon_i$ se distribuye normal
+Teniendo como hipótesis:
 
--   $H_1 \epsilon_i$ no se distribuye normal
+$H_0: \frac{\sigma_1^2}{\sigma_2^2} = 1$
+
+$H_1: \frac{\sigma_1^2}{\sigma_2^2} \neq 1$
+
+Por Región de Rechazo de $H_0$:
+
+Como se sabe que las poblaciones son normales y una es independiente de la otra, entonces se puede aplicar:
+
+$f_{cal} = \frac{S_1^2}{S_2^2}$, donde $v_1 = n_1-1, v_2=n_2-1$
+
+Donde los límites de la región de rechazo son dados por:
+
+$f_{0.025} =$ qf(0.025, df1 = 341-1, df2 = 119-1, lower.tail = TRUE)
 
 ```{r}
-shapiro.test(PESO_C)
+qf(0.025, df1 = n1-1, df2 = n2-1, lower.tail = TRUE)
 ```
+
+Teniendo así $f_{0.025} \approx 0.75$
+
+$f_{0.975} =$ qf(0.975, df1 = 1095-1, df2 = 119-1, lower.tail = TRUE)
+
+```{r}
+qf(0.975, df1 = n1-1, df2 = n2-1, lower.tail = TRUE)
+```
+
+Teniendo así $f_{0.975} \approx 1.36$
+
+De esta manera, todo valor $f_{cal}$ menor a 0.75 o mayor a 1.36 se encontrará dentro de la Región de Rechazo para $H_0$. Ahora:
+
+$f_{cal} = \frac{0.41^2}{0.45^2} \approx 0.83$
+
+Como $f_{cal} \notin$ Región de Rechazo, entonces **no hay evidencia suficiente** para poder rechazar $H_0$, sujeto a $\alpha = 0.05$.
+
+#### $¿\mu_1 < \mu_2?$ = $¿\mu_1 - \mu_2 < 0?$
+
+Teniendo como hipótesis (invertidas):
+
+$H_0: \mu_1 - \mu_2 \geq 0$
+
+$H_1: \mu_1 - \mu_2 < 0$
+
+Como se sabe que las poblaciones son normales, una es independiente de la otra y se ha mostrado que existe la posibilidad de que $\sigma_1^2 = \sigma_2^2$, entonces se procede bajo:
+
+$t_{cal} = \frac{(\bar{X_1}-\bar{X_2})-d_0}{S_p\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$, donde $S_p = \sqrt{\frac{(n_1-1)\cdot S_1^2 + (n_2-1)\cdot S_2^2}{n_1 + n_2-2}}$ y $v = n_1 + n_2 - 2$.
+
+Donde el límite de la región de rechazo es dado por:
+
+$t_{0.05} =$ qt(0.05, df = 341+119-2, lower.tail = TRUE)
+
+```{r}
+qt(0.05, df = n1+n2-2, lower.tail = TRUE)
+```
+
+Teniendo así $t_{0.05} \approx -1.65$
+
+De esta manera, todo valor $t_cal$ menor a -1.65 se encontrará dentro de la Región de Rechazo para $H_0$. Ahora:
+
+$S_p = \sqrt{\frac{(341-1)\cdot 0.41^2 + (119-1)\cdot 0.45^2}{341 + 119-2}} \approx 0.42$
+
+$t_{cal} = \frac{(3.24-3.26)-0}{(0.42)\sqrt{\frac{1}{341}+\frac{1}{119}}} \approx -0.45$
+
+Como $t_{cal} \notin$ Región de Rechazo, entonces **no hay evidencia suficiente** para poder rechazar $H_0$, por lo que no se puede asegurar con certeza que se cumpla $H_1: \mu_1 - \mu_2 < 0$, sujeto a $\alpha = 0.05$.
+
+**2. El peso de los bebés cuyas madres vivan en una área correspondiente a Rural Disperso sea menor a la de la Cabecera Municipal:**
+
+Se tienen los siguientes datos:
+
+$X_1$ = Peso en kilogramos de los bebés cuyas madres viven en el área correspondiente a **Rural Disperso**.
+
+$X_2$ = Peso en kilogramos de los bebés cuyas madres viven en la **Cabecera Municipal**.
+
+$\alpha = 0.05$ (Por defecto)
+
+```{r}
+X1 <- subset(Base_Datos, AREA.RESIDENCIA == "RURAL DISPERSO")$PESO..Gramos.
+n1 <- length(X1)
+varX1 <- mean(X1)
+S1 <- sd(X1)
+
+X2 <- subset(Base_Datos, AREA.RESIDENCIA == "CABECERA MUNICIPAL")$PESO..Gramos.
+n2 <- length(X2)
+varX2 <- mean(X2)
+S2 <- sd(X2)
+
+cat("n1 = ", n1, "\n")
+cat("varX1 = ", varX1, "\n")
+cat("S1 = ", S1, "\n")
+
+cat("n2 = ", n2, "\n")
+cat("varX2 = ", varX2, "\n")
+cat("S2 = ", S2, "\n")
+```
+
+Como $n_1 \geq 30$ y $n_2 \geq 30$, se puede asumir que $X_1 \sim Normal(\mu_1, \sigma_1)$ y $X_2 \sim Normal(\mu_2, \sigma_2)$. Para saber cómo proceder, el fundamental primeramente comprobar si $\sigma_1^2 = \sigma_2^2$. Por lo que:
+
+#### $¿\sigma_1^2 = \sigma_2^2?$ = $¿\frac{\sigma_1^2}{\sigma_2^2} = 1?$:
+
+Teniendo como hipótesis:
+
+$H_0: \frac{\sigma_1^2}{\sigma_2^2} = 1$
+
+$H_1: \frac{\sigma_1^2}{\sigma_2^2} \neq 1$
+
+Por Región de Rechazo de $H_0$:
+
+Como se sabe que las poblaciones son normales y una es independiente de la otra, entonces se puede aplicar:
+
+$f_{cal} = \frac{S_1^2}{S_2^2}$, donde $v_1 = n_1-1, v_2=n_2-1$
+
+Donde los límites de la región de rechazo son dados por:
+
+$f_{0.025} =$ qf(0.025, df1 = 341-1, df2 = 1095-1, lower.tail = TRUE)
+
+```{r}
+qf(0.025, df1 = n1-1, df2 = n2-1, lower.tail = TRUE)
+```
+
+Teniendo así $f_{0.025} \approx 0.84$
+
+$f_{0.975} =$ qf(0.975, df1 = 341-1, df2 = 1095-1, lower.tail = TRUE)
+
+```{r}
+qf(0.975, df1 = n1-1, df2 = n2-1, lower.tail = TRUE)
+```
+
+Teniendo así $f_{0.975} \approx 1.18$
+
+De esta manera, todo valor $f_{cal}$ menor a 0.84 o mayor a 1.18 se encontrará dentro de la Región de Rechazo para $H_0$. Ahora:
+
+$f_{cal} = \frac{0.41^2}{0.45^2} \approx 0.83$
+
+Como $f_{cal} \in$ Región de Rechazo, entonces se rechaza $H_0$, por lo que se acepta $H_1: \frac{\sigma_1^2}{\sigma_2^2} \neq 1$.
+
+#### $¿\mu_1 < \mu_2?$ = $¿\mu_1 - \mu_2 < 0?$
+
+Teniendo como hipótesis (invertidas):
+
+$H_0: \mu_1 - \mu_2 \geq 0$
+
+$H_1: \mu_1 - \mu_2 < 0$
+
+Como se sabe que las poblaciones son normales, una es independiente de la otra y se ha mostrado que se tiene la certeza de que $\frac{\sigma_1^2}{\sigma_2^2} \neq 1$, entonces se procede bajo:
+
+$t_{cal} = \frac{(\bar{X_1}-\bar{X_2})-d_0}{\sqrt{\frac{S_1^2}{n_1}+\frac{S_2^2}{n_2}}}$, donde $v = \frac{(\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2})^2}{\frac{(S_1^2/n_1)^2}{n_1-1}+\frac{(S_2^2/n_2)^2}{n_2-1}}$.
+
+Donde el límite de la región de rechazo es dado por:
+
+$v = \frac{(\frac{0.41^2}{341} + \frac{0.45^2}{1095})^2}{\frac{(0.41^2/341)^2}{341-1}+\frac{(0.45^2/1095)^2}{1095-1}} \approx 616.01$
+
+$t_{0.05} =$ qt(0.05, df = 616.01, lower.tail = TRUE)
+
+```{r}
+qt(0.05, df = 616.01, lower.tail = TRUE)
+```
+
+Teniendo así $t_{0.05} \approx -1.65$
+
+De esta manera, todo valor $t_cal$ menor a -1.65 se encontrará dentro de la Región de Rechazo para $H_0$. Ahora:
+
+$t_{cal} = \frac{(3.24-3.26)-0}{\sqrt{\frac{0.41^2}{341}+\frac{0.45^2}{1095}}} \approx -0.77$
+
+Como $t_{cal} \notin$ Región de Rechazo, entonces **no hay evidencia suficiente** para poder rechazar $H_0$, por lo que no se puede asegurar con certeza que se cumpla $H_1: \mu_1 - \mu_2 < 0$.
+
+**3. Conclusiones:**
+
+Como se ha podido evidenciar, para los dos casos, no se puede asgurar que la media o promedio del peso de los bebés cuyas madres viven en **Rural Disperso** sea menor a comparación de las otras categorías, por lo que se deja esta hipótesis como una posibilidad y no como una certeza.
 
 ### OBJETIVO 2: TABLA DE FRECUENCIAS DEL TIPO DE PARTO CATEGORIZADO POR EL ÁREA DE RESIDENCIA
 
@@ -360,7 +529,7 @@ El modelo lineal generado sigue la ecuación runs $y= -3.671796 + 0.138513$ . Es
 
 ggplot(data = datos, mapping = aes(x = PESO, y = TALLA)) +
   geom_point(color = "firebrick", size = 2) +
-  labs(title  =  'PESO(KILOGRAMOS)', x  =  'TALLA(CENTIMETROS)') +
+  labs(x="PESO (KILOGRAMOS)", y="TALLA (CENTÍMETROS)") +
   geom_smooth(method = "lm", se = FALSE, color = "black")
 ```
 
