@@ -475,7 +475,7 @@ plot(PESO, TALLA,
 
 *Figura 5: Gráfico de Dispersión que permite observar la relación entre la talla y el peso del recién nacido.*
 
-### Coeficiente de correlación
+#### Coeficiente de correlación
 
 ```{r}
 print(cor(PESO, TALLA))
@@ -493,36 +493,40 @@ Con un coeficiente de correlación de 0.66 de la **talla al nacer** y el **peso 
 
 -   Aunque hay una tendencia positiva general, también hay una ligera pero considerable dispersión en los datos. Por ejemplo, para un peso dado, hay una variabilidad en la talla y viceversa. Esto indica que, aunque el peso y la talla están relacionados, otros factores también pueden influir en estas medidas al nacer (Ver Tabla 3).
 
-## Objetivo 3: Análisis de regresión lineal
+### Análisis del objetivo 3
 
-### Hipótesis
+Respecto a los aspectos anteriores, la gran mayoría de los datos muestran que, los bebés que nacen con una talla en el rango de 45 a 55 centímetros tienen un peso al nacer en el rango de 2.5 a 4 kilogramos. Además, de acuerdo con la gráfica anterior (Ver figura 5), se puede ver que los datos se comportan de manera proporcional unos a otros, es decir, que a medida que aumenta el peso de nacimiento del bebé, aumenta la talla del nacimiento del bebé.
 
--   $H_0:$ Es una regresión lineal
+### OBJETIVO 3: ANÁLISIS DE REGRESIÓN LINEAL
 
--   $H_1:$ No es una regresión lineal
+Se busca generar una Regresión Lineal que pueda predecir el crecimiento de la talla de los bebés recién nacidos respecto a su peso. Se toma en cuenta un nivel de significancia del 5%.
 
-### Cálculo del modelo
+#### Cálculo del modelo
 
 ```{r}
 #Data frame
-datos <- data.frame(TALLA, PESO)
+datos <- data.frame(PESO, TALLA)
 
-Modelo <- lm(PESO ~ TALLA, datos)
+Modelo <- lm(TALLA ~ PESO, datos)
 
 summary(Modelo)
 ```
 
+*Tabla 4: Información sobre el modelo de regresión lineal simple para el peso vs talla*
+
 De las salidas anteriores se puede extraer que:
 
-La primera columna (Estimate) devuelve el valor estimado para los dos parámetros de la ecuación del modelo lineal($\beta_0$ y $\beta_1$) que equivalen a la ordenada en el origen y la pendiente.
+La primera columna (Estimate) devuelve el valor estimado para los dos parámetros de la ecuación del modelo lineal($\beta_0$ y $\beta_1$) que equivalen a la ordenada en el origen y la pendiente (Ver Tabla 4).
 
-El valor de $R^2$ indica que el modelo calculado explica el 44.13% de la variabilidad presente en la variable respuesta (PESO) mediante la variable independiente (TALLA).
+Se puede evidenciar que la ordenada en el origen y la pendiente son significativas (p-value \< 0.05) (Ver Tabla 4).
 
-El p-value obtenido en el test F ($2.2 \times 10^{-16}$) determina que sí es significativamente superior la varianza explicada por el modelo en comparación a la varianza total. Es el parámetro que determina si el modelo es significativo y por lo tanto se puede aceptar.
+El valor de $R^2$ indica que el modelo calculado explica el 44.13% de la variabilidad presente en la variable respuesta (TALLA) mediante la variable independiente (PESO) (Ver Tabla 4).
 
-El modelo lineal generado sigue la ecuación runs $y= -3.671796 + 0.138513$ . Es decir, por cada kilogramo que se incrementa, la talla al nacer aumenta en promedio 0.6305 unidades.
+El p-value obtenido en el test F ($2.2 \times 10^{-16}$) determina que sí es significativamente superior la varianza explicada por el modelo en comparación a la varianza total (Ver Tabal 4). Es el parámetro que determina si el modelo es significativo y por lo tanto se puede aceptar.
 
-## Gráfica del modelo aproximado
+El modelo lineal generado sigue la ecuación TALLA $TALLA= 39.68144 + 3.18629PESO$ (Ver Tabla 4). Es decir, por cada kilogramo que se incrementa, la talla al nacer aumenta en promedio 3.18629 unidades.
+
+#### Gráfica del modelo aproximado
 
 ```{r}
 # ----- Gráfica del modelo
@@ -535,41 +539,51 @@ ggplot(data = datos, mapping = aes(x = PESO, y = TALLA)) +
 
 *Figura 6: Gráfico de Dispersión con una aproximación lineal que se ajusta a los datos.*
 
-## Validación de los supuestos
+#### Validación de los supuestos
 
-Para validad los supuestos del modelo, se debe combinar dos tipos de pruebas: gráficas y formales. Las pruebas formales son pruebas de hipótesis estadísticas que simplemente ayudan a validar, con cierta probabilidad, una hipótesis. El criterio del valor P indica que, si $P > \alpha$ se rechaza $H_0$.
+Para validad los supuestos del modelo, se debe combinar dos tipos de pruebas: gráficas y formales. Las pruebas formales son pruebas de hipótesis estadísticas que simplemente ayudan a validar, con cierta probabilidad, una hipótesis. El criterio del valor P indica que, si $P \leq \alpha$ se rechaza $H_0$.
 
-### Normalidad en los errores
+##### Normalidad en los errores
 
-#### Hipótesis
+##### Hipótesis
 
 -   $H_0: \epsilon_i$ se distribuye normal
 
--   $H_1 \epsilon_i$ no se distribuye normal
+-   $H_1: \epsilon_i$ no se distribuye normal
 
 ```{r}
 shapiro.test(Modelo$residuals)
 ```
 
+Como se puede apreciar, p-value $< \alpha=0.05$, por lo que se rechaza $H_0$, llegando a la conclusión de que los errores en la gráfica NO se distribuyen normal (se acepta $H_1$).
+
+##### Prueba gráfica
+
 ```{r}
 qqPlot(Modelo$residuals)
 ```
 
-*Figura 7: .*
+*Figura 7: Gráfio de distribución de normalidad en los errores.*
 
-### Homocedasticidad (varianza constante en los errores)
+Como se puede evidenciar en la gráfica, los puntos extremos se desvían sistemáticamente de la línea de referencia (Ver Figura 7), por lo que esto demuestra que efectivamente los errores no se distribuyen normal.
 
-Prueba de hipótesis para valdiar la homogeneidad en los errores:
+##### Homocedasticidad (varianza constante en los errores)
 
-#### Hipótesis
+Prueba de hipótesis para validar la homogeneidad en los errores:
 
--   $H_0: \epsilon$ son homogéneos
+##### Hipótesis
 
--   $H_1 \epsilon$ no son homogéneos
+-   $H_0: \epsilon_i$ son homogéneos
+
+-   $H_1: \epsilon_i$ no son homogéneos
 
 ```{r}
 bptest(Modelo)
 ```
+
+Como se puede apreciar, p-value $< \alpha=0.05$, por lo que se rechaza $H_0$, llegando a la conclusión de que los errores en la gráfica NO son homogéneos (se acepta $H_1$).
+
+##### Prueba gráfica
 
 ```{r}
 ggplot(data = datos, aes(Modelo$fitted.values, Modelo$residuals)) +
@@ -577,6 +591,48 @@ ggplot(data = datos, aes(Modelo$fitted.values, Modelo$residuals)) +
     theme_bw()
 ```
 
-### Análisis del objetivo 3
+*Figura 8: Prueba gráfica de la homogeneidad.*
 
-Respecto a los aspectos anteriores, la gran mayoría de los datos muestran que, los bebés que nacen con una talla en el rango de 45 a 55 centímetros tienen un peso al nacer en el rango de 2.5 a 4 kilogramos. Además, de acuerdo con la gráfica anterior (Ver figura 5), se puede ver que los datos se comportan de manera proporcional unos a otros, es decir, que a medida que aumenta el peso de nacimiento del bebé, aumenta la talla del nacimiento del bebé.
+Como se puede evidenciar en el gráfico, los puntos en su mayoría se encuentran dispersos y no alineados por completo con la línea representada (Ver Figura 8), por lo que se demuestra que efectivamente los errores NO son homogéneos.
+
+##### Independencia en los errores
+
+Prueba de hipótesis para validar la independencia en los errores:
+
+##### Hipótesis
+
+-   $H_0: \epsilon_i$ son independientes
+
+-   $H_1: \epsilon_i$ no son independientes
+
+```{r}
+bptest(Modelo)
+```
+
+Como se puede apreciar, p-value $< \alpha=0.05$, por lo que se rechaza $H_0$, llegando a la conclusión de que los errores en la gráfica NO son independientes (se acepta $H_1$).
+
+##### Prueba gráfica
+
+```{r}
+ggplot(data = datos, aes(1:nrow(datos), Modelo$residuals)) +
+    geom_line() + geom_hline(yintercept = 0) +
+    theme_bw()
+```
+
+*Figura 9: Prueba gráfica de la independencia de los errores.*
+
+Como se puede evidenciar en el gráfico, se evidencia una especie de patrón de tipo cíclico, es decir, los valores de los residuos suben y bajan aproximadamente por los mismos valores (Ver Figura 9). Esto permite demostrar que efectivamente los errores NO son independientes.
+
+### CONCLUSIONES:
+
+Primeramente, se ha podido evidenciar con la toma de muestras y los análisis hipotéticos realizados que no es del todo correcto pensar que siempre se va a cumplir que los pesos de los recién nacidos cuyas madres vivan en zonas rurales vayan a tener un peso menor al de las otras posibles zonas donde pueden vivir las madres.
+
+Por otra parte, se ha observado que la mayor cantidad de partos registrados en el municipio han sucedido para madres que viven en la **Cabecera Municipal**. Además de haber mostrado que para todas las zonas de residencia de las madres, lo más común registrado es que los bebés hayan nacido de manera espontánea, por lo que no se puede asumir que el tipo de parto y el área de residencia de la madre tenga alguna influencia con el peso del recién nacido.
+
+Por último, aunque se ha podido mostrar un modelo de regresión lineal, se ha puesto en evidencia que es muy poco probable que los datos obtenidos vayan a seguir este modelo, ya que los residuos han mostrado no ser normales, homogéneos e independientes.
+
+### REFERENCIAS:
+
+-   Camilo, J. (2022). Ejemplo de regresión lineal.
+-   ¿Cómo validar tu modelo de regresión? (s. f.). Máxima Formación. <https://www.maximaformacion.es/blog-dat/como-validar-tu-modelo-de-regresion/>
+-   Nacimientos 2021 - 2022 \| Datos abiertos Colombia. (2022, 29 junio). <https://www.datos.gov.co/Salud-y-Protecci-n-Social/Nacimientos-2021-2022/e7w8-zhsx/data_preview>
